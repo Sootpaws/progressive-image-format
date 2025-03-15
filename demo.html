@@ -2,72 +2,10 @@
 <html>
     <head>
         <title>Progressive Image Demo</title>
+        <script src="linear_loader.js"></script>
     </head>
     <body>
         <h1>Progressive Image Demo</h1>
-        <script>
-            class LinearLoader {
-                constructor(stream, width, height) {
-                    this.setWidth = width;
-                    this.setHeight = height;
-                    this.imgWidth = null;
-                    this.imgHeight = null;
-                    this.state = "header";
-                    this.nextX = 0;
-                    this.nextY = 0;
-                    this.canvas = document.createElement("canvas");
-                    this.canvas.width = width;
-                    this.canvas.height = height;
-                    this.ctx = this.canvas.getContext("2d");
-                    this.read(stream);
-                }
-                async read(stream) {
-                    let buffer = new Uint8Array();
-                    for await (const chunk of stream) {
-                        let merged = new Uint8Array(buffer.length + chunk.length);
-                        merged.set(buffer);
-                        merged.set(chunk, buffer.length);
-                        buffer = this.process(merged);
-                    }
-                }
-                process(buffer) {
-                    let consumed = 0;
-                    do {
-                        consumed = 0;
-                        const length = buffer.length;
-                        if (this.state == "header" && length >= 4) {
-                            this.imgWidth = buffer[0] * 0x100 + buffer[1];
-                            this.imgHeight = buffer[2] * 0x100 + buffer[3];
-                            this.pixelWidth = this.setWidth / this.imgWidth;
-                            this.pixelHeight = this.setHeight / this.imgHeight;
-                            consumed = 4;
-                            this.state = "pixels";
-                        } else if (this.state == "pixels" && length >= 4) {
-                            let color = `rgba(
-                                ${buffer[0]}, ${buffer[1]},
-                                ${buffer[2]}, ${buffer[3]}
-                            )`;
-                            this.ctx.fillStyle = color;
-                            const padding = 1;
-                            this.ctx.fillRect(
-                                this.nextX * this.pixelWidth,
-                                this.nextY * this.pixelHeight,
-                                this.pixelWidth + padding,
-                                this.pixelHeight + padding
-                            );
-                            this.nextX++;
-                            if (this.nextX >= this.imgWidth) {
-                                this.nextY++;
-                                this.nextX = 0;
-                            }
-                            consumed = 4;
-                        }
-                        buffer = buffer.slice(consumed);
-                    } while(consumed != 0);
-                    return buffer;
-                }
-            }
-        </script>
         <script>
             function wait(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
