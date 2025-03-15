@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Progressive Image Demo</title>
+    </head>
+    <body>
+        <h1>Progressive Image Demo</h1>
+        <script>
+            class LinearLoader {
+                constructor(stream, width, height) {
+                    this.setWidth = width;
+                    this.setHeight = height;
+                    this.imgWidth = null;
+                    this.imgHeight = null;
+                    this.state = "header";
+                    this.nextX = 0;
+                    this.nextY = 0;
+                    this.canvas = document.createElement("canvas");
+                    this.canvas.width = width;
+                    this.canvas.height = height;
+                    this.ctx = this.canvas.getContext("2d");
+                    this.read(stream);
+                }
+                async read(stream) {
+                    let buffer = new Uint8Array();
+                    for await (const chunk of stream) {
+                        let merged = new Uint8Array(buffer.length + chunk.length);
+                        merged.set(buffer);
+                        merged.set(chunk, buffer.length);
+                        buffer = this.process(merged);
+                    }
+                }
+                process(buffer) {
+                    let consumed = 0;
+                    do {
+                        consumed = 0;
+                        const length = buffer.length;
+                        if (this.state == "header" && length >= 4) {
+                            this.imgWidth = buffer[0] * 0x100 + buffer[1];
+                            this.imgHeight = buffer[2] * 0x100 + buffer[3];
+                            this.pixelWidth = this.setWidth / this.imgWidth;
+                            this.pixelHeight = this.setHeight / this.imgHeight;
+                            consumed = 4;
+                            this.state = "pixels";
+                        } else if (this.state == "pixels" && length >= 4) {
+                            let color = `rgba(
+                                ${buffer[0]}, ${buffer[1]},
+                                ${buffer[2]}, ${buffer[3]}
+                            )`;
+                            this.ctx.fillStyle = color;
+                            const padding = 1;
+                            this.ctx.fillRect(
+                                this.nextX * this.pixelWidth,
+                                this.nextY * this.pixelHeight,
+                                this.pixelWidth + padding,
+                                this.pixelHeight + padding
+                            );
+                            this.nextX++;
+                            if (this.nextX >= this.imgWidth) {
+                                this.nextY++;
+                                this.nextX = 0;
+                            }
+                            consumed = 4;
+                        }
+                        buffer = buffer.slice(consumed);
+                    } while(consumed != 0);
+                    return buffer;
+                }
+            }
+        </script>
+        <script>
+            function wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            const transform = {
+                async transform(chunk, controller) {
+                    chunk = await chunk;
+                    for (let i = 0; i < chunk.length; i += this.chunkSize) {
+                        const end = Math.min(i + this.chunkSize, chunk.length);
+                        const subchunk = chunk.slice(i, end);
+                        controller.enqueue(subchunk);
+                        await wait(0);
+                    }
+                }
+            };
+            class BandwidthLimiter extends TransformStream {
+                constructor(chunkSize) {
+                    super({ ...transform, chunkSize });
+                }
+            }
+        </script>
+        <script>
+            const demos = [{
+                name: "Test images",
+                display: html_image,
+            }, {
+                name: "Linear loading",
+                display: linear_load,
+            }];
+
+            const images = [{
+                url: "demo_images/complex_photo.jpg",
+                width: 200,
+                height: 150,
+                limit: 4096,
+                sharp: false
+            }, {
+                url: "demo_images/simple_photo.jpg",
+                width: 200,
+                height: 150,
+                limit: 4096,
+                sharp: false
+            }, {
+                url: "demo_images/pixel_art.png",
+                width: 200,
+                height: 200,
+                limit: 4,
+                sharp: true
+            }]
+
+            async function html_image(img) {
+                let e = document.createElement("img");
+                e.src = img.url;
+                e.width = img.width;
+                e.height = img.height;
+                if (img.sharp) e.className = "sharp";
+                return e;
+            }
+
+            async function setup_loader(img, ext, loader) {
+                let url = img.url.split(".");
+                url.pop();
+                url = url.join(".") + ext;
+                let request = await fetch(url);
+                if (!request.ok) {
+                    return document.createTextNode("Could not fetch " + img.url);
+                }
+                let stream = request.body.pipeThrough(new BandwidthLimiter(img.limit));
+                let l = new loader(stream, img.width, img.height);
+                return l.canvas;
+            }
+
+            async function linear_load(img) {
+                return setup_loader(img, ".sif", LinearLoader);
+            }
+
+            async function demo() {
+                let demo_table = document.createElement("table");
+                for (demo of demos) {
+                    let demo_row = document.createElement("tr");
+                    let cell = document.createElement("td");
+                    cell.appendChild(document.createTextNode(demo.name));
+                    demo_row.appendChild(cell);
+                    for (image of images) {
+                        let cell = document.createElement("td");
+                        cell.appendChild(await demo.display(image));
+                        demo_row.appendChild(cell);
+                    }
+                    demo_table.appendChild(demo_row);
+                }
+                document.body.appendChild(demo_table);
+            }
+            demo()
+        </script>
+        <style>
+            .sharp {
+                image-rendering: pixelated;
+            }
+        </style>
+    </body>
+</html>
