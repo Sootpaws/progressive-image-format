@@ -44,6 +44,7 @@ def previous_layer(img):
     height = math.ceil(height / 2)
     o = Image.new("RGBA", (width, height), (0x80, 0x20, 0xf0, 0xff))
     for y in range(0, height):
+        print(str(y) + "/" + str(height))
         for x in range(0, width):
             min_vals = None
             max_vals = None
