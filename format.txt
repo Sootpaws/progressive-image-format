@@ -1,6 +1,6 @@
 Format:
     Header:
-        Magic (4 bytes): 0x00 0x53 0x50 0x49 - <null>SPI in ASCII
+        Magic (4 bytes): 0x00 0x50 0x53 0x49 - <null>PSI in ASCII
         Full width (BE u16)
             Width of the full image in pixels
         Full height (BE u16)
