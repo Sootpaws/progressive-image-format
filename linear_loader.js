@@ -9,6 +9,10 @@ class LinearLoader {
         this.img_width = null;
         this.img_height = null;
 
+        // Size of a souce pixel in rendered pixels
+        this.pixel_width = null;
+        this.pixel_height = null;
+
         // Parsing state
         this.state = "header";
         this.next_x = 0;
