@@ -72,7 +72,7 @@
                 url = url.join(".") + ext;
                 let request = await fetch(url);
                 if (!request.ok) {
-                    return document.createTextNode("Could not fetch " + img.url);
+                    return document.createTextNode("Could not fetch " + url);
                 }
                 let stream = request.body.pipeThrough(new BandwidthLimiter(img.limit));
                 let l = new loader(stream, img.width, img.height);
