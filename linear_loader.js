@@ -85,12 +85,11 @@ class LinearLoader {
                     this.next_y++;
                     this.next_x = 0;
                 }
-
                 if (this.next_y >= this.img_height) {
                     this.state = "finished";
-                } else {
-                    consumed = 4;
                 }
+
+                consumed = 4;
             }
 
             if (consumed == 0) return buffer;
