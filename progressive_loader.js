@@ -169,7 +169,10 @@ class ProgressiveLoader {
                 if (this.next_y >= size.height) {
                     this.layer_index += 1;
 
-                    if (this.layer_index < this.layer_dimensions.length) {
+                    if (
+                        this.layer_index < this.layer_dimensions.length &&
+                        (pixel_width >= 1 || pixel_height >= 1)
+                    ) {
                         this.state = "layer";
                         this.next_y = 0;
                     } else {
