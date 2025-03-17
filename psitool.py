@@ -64,6 +64,7 @@ def diff(prev, img):
     o = b''
     for y in range(0, height):
         l = b''
+        print(str(y) + "/" + str(height))
         for x in range(0, width):
             prev_pixel = prev.getpixel((int(x / 2), int(y / 2)))
             pixel = img.getpixel((x, y))
