@@ -43,40 +43,52 @@
                 sharp: true
             }];
 
-            async function bandwidth_limit(img) {
-                return document.createTextNode(img.bandwidth + " KiB/s");
+            async function bandwidth_limit(img, node) {
+                node.appendChild(document.createTextNode(img.bandwidth + " KiB/s"));
             }
 
-            async function html_image(img) {
+            async function html_image(img, node) {
                 let e = document.createElement("img");
                 e.src = img.url;
                 e.width = img.width;
                 e.height = img.height;
                 if (img.sharp) e.className = "sharp";
-                return e;
+                node.appendChild(e);
             }
 
-            async function setup_loader(img, ext, loader) {
+            async function setup_loader(img, ext, loader_class, node) {
+                // Get URL to image
                 let url = img.url.split(".");
                 url.pop();
                 url = url.join(".") + ext;
+
+                // Set up bandwidth-limited source stream
                 let request = await fetch(url);
                 if (!request.ok) {
                     return document.createTextNode("Could not fetch " + url);
                 }
                 let stream = request.body.pipeThrough(new BandwidthLimiter(img.bandwidth));
-                let l = new loader(stream, img.width, img.height);
-                l.canvas.className = "loading";
-                l.complete.then(() => l.canvas.className = "complete");
-                return l.canvas;
+
+                // Create loader
+                let loader = new loader_class(stream, img.width, img.height);
+                loader.canvas.className = "loading";
+                loader.complete.then(bytes => {
+                    loader.canvas.className = "complete";
+                    const used = Math.round((bytes / 1024) * 1000) / 1000;
+                    node.appendChild(document.createElement("br"));
+                    node.appendChild(document.createTextNode(
+                        used + "KiB used")
+                    );
+                });
+                node.appendChild(loader.canvas);
             }
 
-            async function linear_load(img) {
-                return setup_loader(img, ".sif", LinearLoader);
+            async function linear_load(img, node) {
+                setup_loader(img, ".sif", LinearLoader, node);
             }
 
-            async function progressive_load(img) {
-                return setup_loader(img, ".psi", ProgressiveLoader);
+            async function progressive_load(img, node) {
+                setup_loader(img, ".psi", ProgressiveLoader, node);
             }
 
             async function demo() {
@@ -88,7 +100,7 @@
                     demo_row.appendChild(cell);
                     for (image of images) {
                         let cell = document.createElement("td");
-                        cell.appendChild(await demo.display(image));
+                        await demo.display(image, cell);
                         demo_row.appendChild(cell);
                     }
                     demo_table.appendChild(demo_row);

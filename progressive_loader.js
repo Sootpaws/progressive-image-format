@@ -18,6 +18,9 @@ class ProgressiveLoader {
         this.prev_layer = null;
         this.current_layer = null;
 
+        // Number of bytes used
+        this.bytes = 0;
+
         // Canvas used for rendering
         this.canvas = document.createElement("canvas");
         this.canvas.width = width;
@@ -187,7 +190,7 @@ class ProgressiveLoader {
                         this.next_y = 0;
                     } else {
                         this.state = "finished";
-                        this.mark_complete();
+                        this.mark_complete(this.bytes + 4);
                     }
                 }
 
@@ -198,6 +201,7 @@ class ProgressiveLoader {
             if (consumed == 0) return buffer;
 
             // Remove processed bytes
+            this.bytes += consumed;
             buffer = buffer.slice(consumed);
         }
     }

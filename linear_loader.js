@@ -18,6 +18,9 @@ class LinearLoader {
         this.next_x = 0;
         this.next_y = 0;
 
+        // Number of bytes used
+        this.bytes = 0;
+
         // Canvas used for rendering
         this.canvas = document.createElement("canvas");
         this.canvas.width = width;
@@ -92,7 +95,7 @@ class LinearLoader {
                 }
                 if (this.next_y >= this.img_height) {
                     this.state = "finished";
-                    this.mark_complete();
+                    this.mark_complete(this.bytes + 4);
                 }
 
                 consumed = 4;
@@ -102,6 +105,7 @@ class LinearLoader {
             if (consumed == 0) return buffer;
 
             // Remove processed bytes
+            this.bytes += consumed;
             buffer = buffer.slice(consumed);
         }
     }
