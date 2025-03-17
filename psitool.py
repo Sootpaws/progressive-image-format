@@ -68,10 +68,10 @@ def diff(prev, img):
         for x in range(0, width):
             prev_pixel = prev.getpixel((int(x / 2), int(y / 2)))
             pixel = img.getpixel((x, y))
-            r = pixel[0] - prev_pixel[0] + 0x80 - 1
-            g = pixel[1] - prev_pixel[1] + 0x80 - 1
-            b = pixel[2] - prev_pixel[2] + 0x80 - 1
-            a = pixel[3] - prev_pixel[3] + 0x80 - 1
+            r = max(pixel[0] - prev_pixel[0] + 0x80 - 1, 0)
+            g = max(pixel[1] - prev_pixel[1] + 0x80 - 1, 0)
+            b = max(pixel[2] - prev_pixel[2] + 0x80 - 1, 0)
+            a = max(pixel[3] - prev_pixel[3] + 0x80 - 1, 0)
             l += struct.pack('!BBBB', r, g, b, a)
         o += l
     return b'M' + o
