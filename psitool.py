@@ -49,7 +49,11 @@ def previous_layer(img):
             min_vals = None
             max_vals = None
             for (xo, yo) in [(0, 0), (0, 1), (1, 0), (1, 1)]:
-                pixel = img.getpixel((x * 2 + xo, y * 2 + yo))
+                sx = x * 2 + xo
+                sy = y * 2 + yo
+                if sx >= img.width or sy >= img.height:
+                    continue
+                pixel = img.getpixel((sx, sy))
                 min_vals = pixel_min(min_vals, pixel)
                 max_vals = pixel_max(max_vals, pixel)
             o.putpixel((x, y), pixel_avg(min_vals, max_vals))
