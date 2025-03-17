@@ -94,6 +94,8 @@
                 }
                 let stream = request.body.pipeThrough(new BandwidthLimiter(img.bandwidth));
                 let l = new loader(stream, img.width, img.height);
+                l.canvas.className = "loading";
+                l.complete.then(() => l.canvas.className = "complete");
                 return l.canvas;
             }
 

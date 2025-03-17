@@ -20,10 +20,12 @@ class LinearLoader {
 
         // Canvas used for rendering
         this.canvas = document.createElement("canvas");
-        this.canvas.className = "loading";
         this.canvas.width = width;
         this.canvas.height = height;
         this.ctx = this.canvas.getContext("2d");
+
+        // Promise resolved on loading completion
+        this.complete = new Promise(res => this.mark_complete = res);
 
         // Start read loop
         this.read(stream);
@@ -87,7 +89,7 @@ class LinearLoader {
                 }
                 if (this.next_y >= this.img_height) {
                     this.state = "finished";
-                    this.canvas.className = "complete";
+                    this.mark_complete();
                 }
 
                 consumed = 4;
