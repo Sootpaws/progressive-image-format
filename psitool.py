@@ -55,11 +55,42 @@ def previous_layer(img):
             o.putpixel((x, y), pixel_avg(min_vals, max_vals))
     return o
 
+def diff(prev, img):
+    (width, height) = img.size
+    o = b''
+    for y in range(0, height):
+        l = b''
+        for x in range(0, width):
+            prev_pixel = prev.getpixel((int(x / 2), int(y / 2)))
+            pixel = img.getpixel((x, y))
+            r = pixel[0] - prev_pixel[0] + 0x80 - 1
+            g = pixel[1] - prev_pixel[1] + 0x80 - 1
+            b = pixel[2] - prev_pixel[2] + 0x80 - 1
+            a = pixel[3] - prev_pixel[3] + 0x80 - 1
+            l += struct.pack('!BBBB', r, g, b, a)
+        o += l
+    return b'M' + o
+
+def diffs_to(img):
+    if img.size == (1, 1):
+        base = Image.new("RGBA", (1, 1), (0x80, 0x80, 0x80, 0x80))
+        return diff(base, img)
+    else:
+        prev = previous_layer(img)
+        return diffs_to(prev) + diff(prev, img)
+
+def create_psi(img):
+    (width, height) = img.size
+    return b'\0PSI' + struct.pack('!HH', width, height) + diffs_to(img)
+
 def process(input_path, simple_path, psi_path):
     img = Image.open(input_path).convert("RGBA")
     simple = create_simple(img)
+    psi = create_psi(img)
     with open(simple_path, "wb") as f:
         f.write(simple)
+    with open(psi_path, "wb") as f:
+        f.write(psi)
 
 def infer_paths(input_path):
     base = input_path[:input_path.rfind(".")]
