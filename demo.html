@@ -8,6 +8,7 @@
     </head>
     <body>
         <h1>Progressive Image Demo</h1>
+        <table id="demo_table"></table>
         <script>
             // Table rows
             const demos = [{
@@ -107,7 +108,7 @@
 
             // Create table
             async function demo() {
-                let demo_table = document.createElement("table");
+                let demo_table = document.getElementById("demo_table");
                 for (demo of demos) {
                     let demo_row = document.createElement("tr");
                     let cell = document.createElement("td");
@@ -120,7 +121,6 @@
                     }
                     demo_table.appendChild(demo_row);
                 }
-                document.body.appendChild(demo_table);
             }
             demo()
         </script>
