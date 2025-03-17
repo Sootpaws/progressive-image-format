@@ -71,12 +71,11 @@ class LinearLoader {
 
                 // Render pixel
                 this.ctx.fillStyle = color;
-                const padding = 1;
                 this.ctx.fillRect(
-                    this.next_x * this.pixel_width,
-                    this.next_y * this.pixel_height,
-                    this.pixel_width + padding,
-                    this.pixel_height + padding
+                    Math.floor(this.next_x * this.pixel_width),
+                    Math.floor(this.next_y * this.pixel_height),
+                    Math.ceil(this.pixel_width),
+                    Math.ceil(this.pixel_height)
                 );
 
                 // Update pixel coordinates
