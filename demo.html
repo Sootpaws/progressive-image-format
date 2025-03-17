@@ -9,6 +9,7 @@
     <body>
         <h1>Progressive Image Demo</h1>
         <script>
+            // Table rows
             const demos = [{
                 name: "Bandwidth limits",
                 display: bandwidth_limit,
@@ -23,6 +24,7 @@
                 display: progressive_load,
             }];
 
+            // Images to compare
             const images = [{
                 url: "demo_images/complex_photo.jpg",
                 width: 200,
@@ -43,10 +45,12 @@
                 sharp: true
             }];
 
+            // Bandwidth limit display
             async function bandwidth_limit(img, node) {
                 node.appendChild(document.createTextNode(img.bandwidth + " KiB/s"));
             }
 
+            // HTML image display
             async function html_image(img, node) {
                 let element = document.createElement("img");
                 element.src = img.url;
@@ -56,6 +60,7 @@
                 node.appendChild(element);
             }
 
+            // Generic loader display
             async function setup_loader(img, ext, loader_class, node) {
                 // Get URL to image
                 let url = img.url.split(".");
@@ -74,6 +79,7 @@
                 loader.canvas.className = "loading";
                 loader.complete.then(bytes => {
                     loader.canvas.className = "complete";
+
                     const used = Math.round((bytes / 1024) * 1000) / 1000;
                     node.appendChild(document.createElement("br"));
                     node.appendChild(document.createTextNode(
@@ -83,14 +89,17 @@
                 node.appendChild(loader.canvas);
             }
 
+            // Linear loader display
             async function linear_load(img, node) {
                 setup_loader(img, ".sif", LinearLoader, node);
             }
 
+            // Progressive loader display
             async function progressive_load(img, node) {
                 setup_loader(img, ".psi", ProgressiveLoader, node);
             }
 
+            // Create table
             async function demo() {
                 let demo_table = document.createElement("table");
                 for (demo of demos) {
