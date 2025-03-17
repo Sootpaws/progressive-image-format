@@ -3,6 +3,7 @@
     <head>
         <title>Progressive Image Demo</title>
         <script src="linear_loader.js"></script>
+        <script src="progressive_loader.js"></script>
     </head>
     <body>
         <h1>Progressive Image Demo</h1>
@@ -35,6 +36,9 @@
             }, {
                 name: "Linear loading",
                 display: linear_load,
+            }, {
+                name: "Progressive loading",
+                display: progressive_load,
             }];
 
             const images = [{
@@ -81,6 +85,10 @@
 
             async function linear_load(img) {
                 return setup_loader(img, ".sif", LinearLoader);
+            }
+
+            async function progressive_load(img) {
+                return setup_loader(img, ".psi", ProgressiveLoader);
             }
 
             async function demo() {
