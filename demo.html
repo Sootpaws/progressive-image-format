@@ -38,6 +38,9 @@
         </script>
         <script>
             const demos = [{
+                name: "Bandwidth limits",
+                display: bandwidth_limit,
+            }, {
                 name: "Test images",
                 display: html_image,
             }, {
@@ -67,6 +70,10 @@
                 bandwidth: 1,
                 sharp: true
             }];
+
+            async function bandwidth_limit(img) {
+                return document.createTextNode(img.bandwidth + " KiB/s");
+            }
 
             async function html_image(img) {
                 let e = document.createElement("img");
