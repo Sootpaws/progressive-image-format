@@ -43,6 +43,7 @@ class LinearLoader {
             // Process
             buffer = this.process(merged);
 
+            // Exit on completion
             if (this.state == "finished") break;
         }
     }
@@ -74,6 +75,8 @@ class LinearLoader {
 
                 // Render pixel
                 this.ctx.fillStyle = color;
+                // Clamp to integer coordinates and dimensions to prevent
+                // blurring and cross-pixel interference
                 this.ctx.fillRect(
                     Math.floor(this.next_x * this.pixel_width),
                     Math.floor(this.next_y * this.pixel_height),
@@ -95,6 +98,7 @@ class LinearLoader {
                 consumed = 4;
             }
 
+            // If no processing could be done, wait for more data
             if (consumed == 0) return buffer;
 
             // Remove processed bytes
