@@ -2,40 +2,12 @@
 <html>
     <head>
         <title>Progressive Image Demo</title>
+        <script src="bandwidth_limiter.js"></script>
         <script src="linear_loader.js"></script>
         <script src="progressive_loader.js"></script>
     </head>
     <body>
         <h1>Progressive Image Demo</h1>
-        <script>
-            function wait(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            const transform = {
-                async transform(chunk, controller) {
-                    let prev_time = Date.now();
-                    chunk = await chunk;
-                    let i = 0;
-                    while (i < chunk.length) {
-                        let now = Date.now();
-                        let elapsed = (now - prev_time) / 1000;
-                        prev_time = now;
-                        const length = Math.round(elapsed * this.bandwidth * 1024);
-                        const end = Math.min(i + length, chunk.length);
-                        const subchunk = chunk.slice(i, end);
-                        controller.enqueue(subchunk);
-                        i += length;
-                        await wait(0);
-                    }
-                }
-            };
-            class BandwidthLimiter extends TransformStream {
-                constructor(bandwidth) {
-                    super({ ...transform, bandwidth });
-                }
-            }
-        </script>
         <script>
             const demos = [{
                 name: "Bandwidth limits",
