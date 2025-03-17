@@ -95,14 +95,14 @@ class ProgressiveLoader {
 
                 // Update previous layer data
                 this.prev_layer = this.current_layer;
-                let size = this.layer_dimensions[this.layer_index];
+                const size = this.layer_dimensions[this.layer_index];
                 this.current_layer = new Uint8Array(size.width * size.height * 4);
 
                 consumed = 1;
                 this.state = "pixels";
             } else if (this.state == "pixels" && length >= 4) {
                 // Get diff
-                let diff = {
+                const diff = {
                     r: buffer[0] - 0x80 + 1,
                     g: buffer[1] - 0x80 + 1,
                     b: buffer[2] - 0x80 + 1,
@@ -121,8 +121,8 @@ class ProgressiveLoader {
                     };
                 } else {
                     // Get from previous layer data
-                    let width = this.layer_dimensions[this.layer_index - 1].width;
-                    let i = (Math.floor(this.next_x / 2) +
+                    const width = this.layer_dimensions[this.layer_index - 1].width;
+                    const i = (Math.floor(this.next_x / 2) +
                         Math.floor(this.next_y / 2) * width) * 4;
                     prev = {
                         r: this.prev_layer[i + 0],
@@ -133,7 +133,7 @@ class ProgressiveLoader {
                 }
 
                 // Apply diff
-                let pixel = {
+                const pixel = {
                     r: prev.r + diff.r,
                     g: prev.g + diff.g,
                     b: prev.b + diff.b,
@@ -141,19 +141,19 @@ class ProgressiveLoader {
                 };
 
                 // Update layer data
-                let layer_size = this.layer_dimensions[this.layer_index];
-                let i = (this.next_x + this.next_y * layer_size.width) * 4;
+                const layer_size = this.layer_dimensions[this.layer_index];
+                const i = (this.next_x + this.next_y * layer_size.width) * 4;
                 this.current_layer[i + 0] = pixel.r;
                 this.current_layer[i + 1] = pixel.g;
                 this.current_layer[i + 2] = pixel.b;
                 this.current_layer[i + 3] = pixel.a;
 
                 // Calculate pixel size
-                let pixel_width = this.set_width / layer_size.width;
-                let pixel_height = this.set_height / layer_size.height;
+                const pixel_width = this.set_width / layer_size.width;
+                const pixel_height = this.set_height / layer_size.height;
 
                 // Extract color
-                let color = `rgba(
+                const color = `rgba(
                     ${pixel.r}, ${pixel.g},
                     ${pixel.b}, ${pixel.a}
                 )`;
@@ -162,17 +162,17 @@ class ProgressiveLoader {
                 this.ctx.fillStyle = color;
                 // Clamp to integer coordinates and dimensions to prevent
                 // blurring and cross-pixel interference
-                let x = Math.floor(this.next_x * pixel_width);
-                let y = Math.floor(this.next_y * pixel_height);
-                let pw = Math.ceil(pixel_width);
-                let ph = Math.ceil(pixel_height);
+                const x = Math.floor(this.next_x * pixel_width);
+                const y = Math.floor(this.next_y * pixel_height);
+                const pw = Math.ceil(pixel_width);
+                const ph = Math.ceil(pixel_height);
                 // Clear to prevent the previous layer showing through
                 // transparent pixels
                 this.ctx.clearRect(x, y, pw, ph);
                 this.ctx.fillRect(x, y, pw, ph);
 
                 // Update pixel coordinates
-                let size = this.layer_dimensions[this.layer_index];
+                const size = this.layer_dimensions[this.layer_index];
                 this.next_x++;
                 if (this.next_x >= size.width) {
                     this.next_y++;

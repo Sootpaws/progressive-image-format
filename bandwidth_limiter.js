@@ -14,8 +14,8 @@ const transform = {
         let i = 0;
         while (i < chunk.length) {
             // Calculate number of bytes to transfer
-            let now = Date.now();
-            let elapsed = (now - prev_time) / 1000;
+            const now = Date.now();
+            const elapsed = (now - prev_time) / 1000;
             prev_time = now;
             const length = Math.round(elapsed * this.bandwidth * 1024);
 

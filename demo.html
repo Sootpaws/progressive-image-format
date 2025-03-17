@@ -48,12 +48,12 @@
             }
 
             async function html_image(img, node) {
-                let e = document.createElement("img");
-                e.src = img.url;
-                e.width = img.width;
-                e.height = img.height;
-                if (img.sharp) e.className = "sharp";
-                node.appendChild(e);
+                let element = document.createElement("img");
+                element.src = img.url;
+                element.width = img.width;
+                element.height = img.height;
+                if (img.sharp) element.className = "sharp";
+                node.appendChild(element);
             }
 
             async function setup_loader(img, ext, loader_class, node) {

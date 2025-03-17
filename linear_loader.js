@@ -71,7 +71,7 @@ class LinearLoader {
                 this.state = "pixels";
             } else if (this.state == "pixels" && length >= 4) {
                 // Extract color
-                let color = `rgba(
+                const color = `rgba(
                     ${buffer[0]}, ${buffer[1]},
                     ${buffer[2]}, ${buffer[3]}
                 )`;
