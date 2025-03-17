@@ -20,6 +20,7 @@ class ProgressiveLoader {
 
         // Canvas used for rendering
         this.canvas = document.createElement("canvas");
+        this.canvas.className = "loading";
         this.canvas.width = width;
         this.canvas.height = height;
         this.ctx = this.canvas.getContext("2d");
@@ -173,6 +174,7 @@ class ProgressiveLoader {
                         this.next_y = 0;
                     } else {
                         this.state = "finished";
+                        this.canvas.className = "complete";
                     }
                 }
 

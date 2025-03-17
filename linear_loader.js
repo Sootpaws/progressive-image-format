@@ -20,6 +20,7 @@ class LinearLoader {
 
         // Canvas used for rendering
         this.canvas = document.createElement("canvas");
+        this.canvas.className = "loading";
         this.canvas.width = width;
         this.canvas.height = height;
         this.ctx = this.canvas.getContext("2d");
@@ -86,6 +87,7 @@ class LinearLoader {
                 }
                 if (this.next_y >= this.img_height) {
                     this.state = "finished";
+                    this.canvas.className = "complete";
                 }
 
                 consumed = 4;
