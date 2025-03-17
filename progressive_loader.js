@@ -43,6 +43,7 @@ class ProgressiveLoader {
             // Process
             buffer = this.process(merged);
 
+            // Exit on completion
             if (this.state == "finished") break;
         }
     }
@@ -89,6 +90,7 @@ class ProgressiveLoader {
                     break;
                 }
 
+                // Update previous layer data
                 this.prev_layer = this.current_layer;
                 let size = this.layer_dimensions[this.layer_index];
                 this.current_layer = new Uint8Array(size.width * size.height * 4);
@@ -107,6 +109,7 @@ class ProgressiveLoader {
                 // Get previous pixel
                 let prev = null;
                 if (this.layer_index == 0) {
+                    // First layer, use default value
                     prev = {
                         r: 0x80,
                         g: 0x80,
@@ -114,6 +117,7 @@ class ProgressiveLoader {
                         a: 0x80
                     };
                 } else {
+                    // Get from previous layer data
                     let width = this.layer_dimensions[this.layer_index - 1].width;
                     let i = (Math.floor(this.next_x / 2) +
                         Math.floor(this.next_y / 2) * width) * 4;
@@ -153,11 +157,14 @@ class ProgressiveLoader {
 
                 // Render pixel
                 this.ctx.fillStyle = color;
-                const padding = 2;
+                // Clamp to integer coordinates and dimensions to prevent
+                // blurring and cross-pixel interference
                 let x = Math.floor(this.next_x * pixel_width);
                 let y = Math.floor(this.next_y * pixel_height);
                 let pw = Math.ceil(pixel_width);
                 let ph = Math.ceil(pixel_height);
+                // Clear to prevent the previous layer showing through
+                // transparent pixels
                 this.ctx.clearRect(x, y, pw, ph);
                 this.ctx.fillRect(x, y, pw, ph);
 
@@ -173,6 +180,7 @@ class ProgressiveLoader {
 
                     if (
                         this.layer_index < this.layer_dimensions.length &&
+                        // Early exit for low-resolution renders
                         (pixel_width >= 1 || pixel_height >= 1)
                     ) {
                         this.state = "layer";
@@ -186,6 +194,7 @@ class ProgressiveLoader {
                 consumed = 4;
             }
 
+            // If no processing could be done, wait for more data
             if (consumed == 0) return buffer;
 
             // Remove processed bytes
