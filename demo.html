@@ -14,18 +14,25 @@
 
             const transform = {
                 async transform(chunk, controller) {
+                    let prev_time = Date.now();
                     chunk = await chunk;
-                    for (let i = 0; i < chunk.length; i += this.chunkSize) {
-                        const end = Math.min(i + this.chunkSize, chunk.length);
+                    let i = 0;
+                    while (i < chunk.length) {
+                        let now = Date.now();
+                        let elapsed = (now - prev_time) / 1000;
+                        prev_time = now;
+                        const length = Math.round(elapsed * this.bandwidth * 1024);
+                        const end = Math.min(i + length, chunk.length);
                         const subchunk = chunk.slice(i, end);
                         controller.enqueue(subchunk);
+                        i += length;
                         await wait(0);
                     }
                 }
             };
             class BandwidthLimiter extends TransformStream {
-                constructor(chunkSize) {
-                    super({ ...transform, chunkSize });
+                constructor(bandwidth) {
+                    super({ ...transform, bandwidth });
                 }
             }
         </script>
@@ -45,21 +52,21 @@
                 url: "demo_images/complex_photo.jpg",
                 width: 200,
                 height: 150,
-                limit: 4096,
+                bandwidth: 10,
                 sharp: false
             }, {
                 url: "demo_images/simple_photo.jpg",
                 width: 200,
                 height: 150,
-                limit: 4096,
+                bandwidth: 10,
                 sharp: false
             }, {
                 url: "demo_images/pixel_art.png",
                 width: 200,
                 height: 200,
-                limit: 4,
+                bandwidth: 1,
                 sharp: true
-            }]
+            }];
 
             async function html_image(img) {
                 let e = document.createElement("img");
@@ -78,7 +85,7 @@
                 if (!request.ok) {
                     return document.createTextNode("Could not fetch " + url);
                 }
-                let stream = request.body.pipeThrough(new BandwidthLimiter(img.limit));
+                let stream = request.body.pipeThrough(new BandwidthLimiter(img.bandwidth));
                 let l = new loader(stream, img.width, img.height);
                 return l.canvas;
             }
