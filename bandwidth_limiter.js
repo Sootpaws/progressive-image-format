@@ -25,7 +25,7 @@ const transform = {
             controller.enqueue(subchunk);
             i += length;
 
-            await wait(0);
+            await wait(100);
         }
     }
 };
