@@ -5,7 +5,7 @@
 Progressive Streamable Image (or PSI) is a proof-of-concept lossless image
 format that allows the image to be displayed at progressively higher resolutions
 while being loaded. This prevents the "dial-up" effect where media loads from
-top to bottom, potentially hiding more relevent portions until the top part
+top to bottom, potentially hiding more relevant portions until the top part
 loads. Additionally, if the image is being displayed at a significantly lower
 resolution to the source data, loading can be stopped or deprioritized once the
 image has been loaded to a high-enough resolution, potentially saving a
@@ -127,7 +127,7 @@ improvement. The most notable are as follows:
     - Resizability of rendered images - Images are rendered to a preset
         resolution and cannot be loaded further if the image scale is increased
     - Performance - Both the encoding and decoding/rendering have extremely poor
-        preformance, and could be significantly optimized
+        performance, and could be significantly optimized
     - Integration - The Javascript rendering system is difficult integrate into
         a standard webpage
 - Analysis
