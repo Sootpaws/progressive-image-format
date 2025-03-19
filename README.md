@@ -3,11 +3,11 @@
 ## Overview
 
 Progressive Streamable Image (or PSI) is a proof-of-concept lossless image
-format that allows the image to be displayed at progressively higher resolutions
+format that allows an image to be displayed at progressively higher resolutions
 while being loaded. This prevents the "dial-up" effect where media loads from
 top to bottom, potentially hiding more relevant portions until the top part
 loads. Additionally, if the image is being displayed at a significantly lower
-resolution to the source data, loading can be stopped or deprioritized once the
+resolution than the source data, loading can be stopped or deprioritized once the
 image has been loaded to a high-enough resolution, potentially saving a
 significant amount of unneeded data transfer.
 
@@ -21,7 +21,7 @@ significant amount of unneeded data transfer.
 - Procedure:
     - Install all dependencies
     - Run `make images` to generate PSI and SIF encodings of each image
-    - Serve the contents of this repository of HTTP and open `demo.html` in a
+    - Serve the contents of this repository over HTTP and open `demo.html` in a
         web browser
 - Using `psitool.py`:
     - Usage: `python3 psitool.py <image path>`
@@ -77,12 +77,12 @@ Full file size:
 |   SIF    |    ~46 MiB    |    ~30 MiB   | ~4.0 KiB  | ~160 KiB  |
 |   PSI    |    ~62 MiB    |    ~41 MiB   | ~5.3 KiB  | ~200 KiB  |
 
-Loaded file size:
+Data transferred to display:
 |  Format  | Complex Photo | Simple Photo | Pixel Art | Many Dots |
 | -------- | ------------- | ------------ | --------- | --------- |
 | Standard |   ~6.6 MiB    |   ~980 KiB   |  ~670 B   |  ~870 B   |
 |   SIF    |    ~46 MiB    |    ~30 MiB   | ~4.0 KiB  | ~160 KiB  |
-|   PSI    |   ~250 Kib    |   ~160 KiB   | ~5.3 KiB  | ~200 KiB  |
+|   PSI    |   ~250 KiB    |   ~160 KiB   | ~5.3 KiB  | ~200 KiB  |
 
 Time to show meaningful content:
 |  Format  | Complex Photo | Simple Photo | Pixel Art | Many Dots |
@@ -90,6 +90,11 @@ Time to show meaningful content:
 | Standard |     ~10 m     |    ~1.5 m    |    0.5 s  |    ~1 s   |
 |   SIF    |     >15 m     |     >15 m    |    ~4 s   |   ~13 s   |
 |   PSI    |     ~6 s      |     ~3 s     |    ~6 s   |    ~6 s   |
+
+| Original Size | Complex Photo | Simple Photo | Pixel Art | Many Dots |
+| ------------- | ------------- | ------------ | --------- | --------- |
+|     Width     |    4032 px    |    3264 px   |   32 px   |   200 px  |
+|     Height    |    3024 px    |    2448 px   |   32 px   |   200 px  |
 
 Notes:
 - Images were rendered at 200 pixels wide.
@@ -126,8 +131,8 @@ improvement. The most notable are as follows:
         resolution and cannot be loaded further if the image scale is increased
     - Performance - Both the encoding and decoding/rendering have extremely poor
         performance, and could be significantly optimized
-    - Integration - The Javascript rendering system is difficult integrate into
-        a standard webpage
+    - Integration - The Javascript rendering system is difficult to integrate
+        into a standard webpage
 - Analysis
     - Limited range of comparison samples - Although the images chosen for the
         demo and efficiency comparison are intended to cover a broad range of
