@@ -39,8 +39,6 @@ Header:
     - Pixels (left to right, top to bottom):
         - Pixel diff in RGBA order, 1 byte per channel
 
-## Comparisons and Analysis
-
 ## Simple Image Format
 
 SIF is just about the simplest and most inefficient bitmap image format
@@ -52,6 +50,46 @@ Header:
 - Full height (BE u16) - Height of the full image in pixels
 - Pixels (left to right, top to bottom):
     - Pixel value in RGBA order, 1 byte unsigned per channel
+
+## Comparisons
+
+Full file size:
+|  Format  | Complex Photo | Simple Photo | Pixel Art | Many Dots |
+| -------- | ------------- | ------------ | --------- | --------- |
+| Standard |   ~6.6 MiB    |   ~980 KiB   |  ~670 B   |  ~870 B   |
+|   SIF    |    ~46 MiB    |    ~30 MiB   | ~4.0 KiB  | ~160 KiB  |
+|   PSI    |    ~62 MiB    |    ~41 MiB   | ~5.3 KiB  | ~200 KiB  |
+
+Loaded file size:
+|  Format  | Complex Photo | Simple Photo | Pixel Art | Many Dots |
+| -------- | ------------- | ------------ | --------- | --------- |
+| Standard |   ~6.6 MiB    |   ~980 KiB   |  ~670 B   |  ~870 B   |
+|   SIF    |    ~46 MiB    |    ~30 MiB   | ~4.0 KiB  | ~160 KiB  |
+|   PSI    |   ~250 Kib    |   ~160 KiB   | ~5.3 KiB  | ~200 KiB  |
+
+Time to show meaningful content:
+|  Format  | Complex Photo | Simple Photo | Pixel Art | Many Dots |
+| -------- | ------------- | ------------ | --------- | --------- |
+| Standard |     ~10 m     |    ~1.5 m    |    0.5 s  |    ~1 s   |
+|   SIF    |     >15 m     |     >15 m    |    ~4 s   |   ~13 s   |
+|   PSI    |     ~6 s      |     ~3 s     |    ~6 s   |    ~6 s   |
+
+Notes:
+- "Time to show meaningful content" is subjective and heavily dependent on the
+    images chosen to compare over, but the differences are large enough to still
+    be meaningful.
+- "Standard" format was JPEG for Complex Photo and Simple Photo, and PNG for
+    Pixel Art and Many Dots.
+- Images were rendered at 200 pixels wide.
+- For the "Time to show meaningful content" data, a bandwidth limit of 10 KiB/s
+    was used for Complex Photo and Simple Photo, and a limit of 1 KiB/s for
+    Pixel Art and Many Dots. Standard format times were calculated from the file
+    size and transfer rate, SIF and PSI were timed using a bandwidth limiter.
+
+## Analysis
+
+- In a bandwidth-limited scenario, the amount of data transferred is directly
+    proportional to load speed.
 
 ## Limitations
 
