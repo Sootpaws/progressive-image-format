@@ -94,12 +94,12 @@ Time to show meaningful content:
 |   PSI    |     ~6 s      |     ~3 s     |    ~6 s   |    ~6 s   |
 
 Notes:
+- Images were rendered at 200 pixels wide.
+- "Standard" format was JPEG for Complex Photo and Simple Photo, and PNG for
+    Pixel Art and Many Dots.
 - "Time to show meaningful content" is subjective and heavily dependent on the
     images chosen to compare over, but the differences are large enough to still
     be meaningful.
-- "Standard" format was JPEG for Complex Photo and Simple Photo, and PNG for
-    Pixel Art and Many Dots.
-- Images were rendered at 200 pixels wide.
 - For the "Time to show meaningful content" data, a bandwidth limit of 10 KiB/s
     was used for Complex Photo and Simple Photo, and a limit of 1 KiB/s for
     Pixel Art and Many Dots. Standard format times were calculated from the file
@@ -107,8 +107,16 @@ Notes:
 
 ## Analysis
 
-- In a bandwidth-limited scenario, the amount of data transferred is directly
-    proportional to load speed.
+- Standard formats have much smaller file sizes than SIF or PSI, and PSI has an
+    approximately 35% overhead compared to SIF
+- For images displayed at resolutions greater than their original size (Pixel
+    Art, Many Dots), standard formats load much faster and use less data. PSI
+    has a slight advantage over SIF for time to meaningful content, but uses
+    slightly more data.
+- For images displayed at significantly reduced resolutions, PSI is much faster
+    than both SIF and standard formats. However, this scenario may not be that
+    common, as images are commonly pre-processed to allow clients to select from
+    a range of resolutions.
 
 ## Limitations
 
