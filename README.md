@@ -11,6 +11,25 @@ resolution to the source data, loading can be stopped or deprioritized once the
 image has been loaded to a high-enough resolution, potentially saving a
 significant amount of unneeded data transfer.
 
+## Running the Demo
+
+Dependencies:
+    - `make`
+    - `python3`
+    - The `pillow` Python library
+    - An HTTP server such as `miniserve`
+
+Procedure:
+    - Install all dependencies
+    - Run `make images` to generate PSI and SIF encodings of each image
+    - Serve the contents of this repository of HTTP and open `demo.html` in a
+        web browser
+
+Using `psitool.py`:
+    - Usage: `python3 psitool.py <image path>`
+    - Encodes the given image into PSI and SIF formats, and write them to files
+        with the same path but with `.psi` and `.sif` extensions
+
 ## Prior Work
 
 The Progressive JPEG format appears to be a reasonable implementation of this
