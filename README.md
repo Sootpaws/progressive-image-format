@@ -91,6 +91,7 @@ Time to show meaningful content:
 |   SIF    |     >15 m     |     >15 m    |    ~4 s   |   ~13 s   |
 |   PSI    |     ~6 s      |     ~3 s     |    ~6 s   |    ~6 s   |
 
+Image dimensions:
 | Original Size | Complex Photo | Simple Photo | Pixel Art | Many Dots |
 | ------------- | ------------- | ------------ | --------- | --------- |
 |     Width     |    4032 px    |    3264 px   |   32 px   |   200 px  |
