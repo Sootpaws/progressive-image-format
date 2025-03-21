@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Sootpaws <sootpaws@proton.me>
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /// Loader for SIF images
 class LinearLoader {
     constructor(stream, width, height) {

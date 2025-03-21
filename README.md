@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2025 Sootpaws <sootpaws@proton.me>
+
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Progressive Streamable Image Format
 
 ## Overview

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Sootpaws <sootpaws@proton.me>
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /// Limit a stream to a bandwidth (KiB/s)
 class BandwidthLimiter extends TransformStream {
     constructor(bandwidth) {
